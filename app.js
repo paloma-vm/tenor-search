@@ -1,3 +1,4 @@
+
 // Require Libraries
 const express = require('express');
 
@@ -13,6 +14,7 @@ const Tenor = require("tenorjs").client({
 
 // App Setup
 const app = express();
+app.use(express.static('public')); // added this here
 
 // Middleware
 const exphbs  = require('express-handlebars');
@@ -27,15 +29,28 @@ app.get('/', (req, res) => {
   term = ""
   if (req.query.term) {
       term = req.query.term
-  }
+  // }
   // Tenor.search.Query("SEARCH KEYWORD HERE", "LIMIT HERE")
   Tenor.Search.Query(term, "10")
-      .then(response => {
-          // store the gifs we get back from the search
-          const gifs = response;
-          // pass the gifs as an object into the home page
+    .then(response => {
+      // store the gifs we get back from the search
+      const gifs = response;
+      // pass the gifs as an object into the home page
+      res.render('home', { gifs })
+    }).catch(console.error);
+  } else if (req.trending) {
+      // Tenor.Trending.GIFs("LIMIT HERE")
+      Tenor.Trending.GIFs("10")
+      .then(Results => {
+        // Results.forEach(Post => {
+          const gifs = Results;
           res.render('home', { gifs })
+          // console.log(`Item #${Post.id} (${Post.created}) @ ${Post.url}`);
       }).catch(console.error);
+
+    }
+
+
 })
 
 // example URL "http://localhost:3000/?term=hey"
