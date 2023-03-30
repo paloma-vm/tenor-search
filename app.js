@@ -1,12 +1,15 @@
 
 // Require Libraries
 const express = require('express');
+require ('dotenv').config();
+KEY = process.env.API_KEY
+
 
 // Require tenorjs near the top of the file
 const Tenor = require("tenorjs").client({
   // Replace with your own key
   // "Key": "TENOR_API_KEY", // https://tenor.com/developer/keyregistration
-  "Key": "AIzaSyC-2OG3waKRD77LS588MaWloweKFpe27Pg", // https://tenor.com/developer/keyregistration
+  "Key": KEY, // https://tenor.com/developer/keyregistration
 
   "Filter": "high", // "off", "low", "medium", "high", not case sensitive
   "Locale": "en_US", // Your locale here, case-sensitivity depends on input
@@ -29,7 +32,7 @@ app.get('/', (req, res) => {
   term = ""
   if (req.query.term) {
       term = req.query.term
-  // }
+  }
   // Tenor.search.Query("SEARCH KEYWORD HERE", "LIMIT HERE")
   Tenor.Search.Query(term, "10")
     .then(response => {
@@ -38,17 +41,19 @@ app.get('/', (req, res) => {
       // pass the gifs as an object into the home page
       res.render('home', { gifs })
     }).catch(console.error);
-  } else if (req.trending) {
-      // Tenor.Trending.GIFs("LIMIT HERE")
-      Tenor.Trending.GIFs("10")
-      .then(Results => {
-        // Results.forEach(Post => {
-          const gifs = Results;
-          res.render('home', { gifs })
-          // console.log(`Item #${Post.id} (${Post.created}) @ ${Post.url}`);
-      }).catch(console.error);
+  // } 
 
-    }
+  // else if (req.trending) {
+  //     // Tenor.Trending.GIFs("LIMIT HERE")
+  //     Tenor.Trending.GIFs("10")
+  //     .then(Results => {
+  //       // Results.forEach(Post => {
+  //         const gifs = Results;
+  //         res.render('home', { gifs })
+  //         // console.log(`Item #${Post.id} (${Post.created}) @ ${Post.url}`);
+  //     }).catch(console.error);
+
+  //   }
 
 
 })
